@@ -1,6 +1,6 @@
 using System;
 
-namespace DefaultNamespace
+namespace Match
 {
     public class QuestionBank
     {
@@ -15,14 +15,14 @@ namespace DefaultNamespace
                 Options = new []{new OptionData{OptionText = "100,000", IsCorrect = true},new OptionData{OptionText = "1,000,000"},new OptionData{OptionText = "25,000"},new OptionData{OptionText = "200,000"}}
             },
             new (){
-                QuestionText = "A prominent German philosopher once said \"The history of all hitherto existing society is the history of _________________\" ", 
-                Options = new []{new OptionData{OptionText = "Exploitation"},new OptionData{OptionText = "Revolution"},new OptionData{OptionText = "False Consciousness"},new OptionData{OptionText = "Class Struggles", IsCorrect = true}}
+                QuestionText = "Which of these storage mediums have the longest expected lifespan?", 
+                Options = new []{new OptionData{OptionText = "Vinyl Record", IsCorrect = true},new OptionData{OptionText = "Floppy Disk"},new OptionData{OptionText = "HDD (Hard Disk Drive)"},new OptionData{OptionText = "Solid State Hard Drive (SSD)"}}
             },
         };
         
         private Random m_Random;
         
-        public void Init()
+        public QuestionBank()
         {
             m_Random = new Random();
         }

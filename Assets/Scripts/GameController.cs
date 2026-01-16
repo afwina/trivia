@@ -1,26 +1,35 @@
-using System.Collections;
 using System.Collections.Generic;
+using Match.Input;
+using Match.MatchState;
 using UnityEngine;
 
-namespace DefaultNamespace
+namespace Match
 {
     public class GameController : MonoBehaviour
     {
-        [SerializeField] private QuestionDisplay m_QuestionDisplay;
-        private QuestionBank m_QuestionBank;
-        
-        private void Start()
+        [SerializeField] private DisplayController m_DisplayController;
+        [SerializeField] private InputController m_InputController;
+
+        private MatchStateMachine m_MatchStateMachine;
+
+        private void Awake()
         {
-            m_QuestionBank = new QuestionBank();
-            m_QuestionBank.Init();
-            EnterQuestionState();
+            var players = new List<string> { "Player_1", "Player_2", "Player_3", "Player_4" };
+            GameStatus gameStatus = new GameStatus(players);
+
+            m_DisplayController.Init(gameStatus);
+            m_MatchStateMachine = new MatchStateMachine(gameStatus);
+            m_InputController.OnInputAction += OnInputAction;
         }
 
-        public void EnterQuestionState()
+        private void Update()
         {
-            Question question = m_QuestionBank.GetQuestion();
-            m_QuestionDisplay.Setup(question);
+            m_MatchStateMachine.Update();
+        }
+
+        private void OnInputAction(InputAction action)
+        {
+            m_MatchStateMachine.OnInputAction(action);
         }
     }
-
 }
