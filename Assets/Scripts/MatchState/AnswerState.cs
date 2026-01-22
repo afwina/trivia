@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Match.MatchState
+namespace Game.MatchState
 {
     public class AnswerState: MatchState
     {

@@ -1,4 +1,4 @@
-﻿namespace Match.EventDispatcher
+﻿namespace Game.EventDispatcher
 {
     public class EventDispatcher
     {

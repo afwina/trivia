@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-namespace Match
+namespace Game
 {
     public class PlayerDisplay : MonoBehaviour
     {

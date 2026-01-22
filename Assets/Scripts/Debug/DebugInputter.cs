@@ -1,13 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
-using Match.Input;
+using Game.Input;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class DebugInputter : MonoBehaviour
 {
     [SerializeField] private TMP_Dropdown m_PlayerDropdown;
-    [SerializeField] private InputController m_InputController;
+    [SerializeField] private ClientsideInputController m_InputController;
 
     public void OnInputPressed(int input)
     {

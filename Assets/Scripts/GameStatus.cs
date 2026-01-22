@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using Match.MatchState;
+using Game.Match;
+using Game.MatchState;
 using UnityEngine;
 
-namespace Match
+namespace Game
 {
     public class GameStatus
     {
@@ -13,16 +14,16 @@ namespace Match
         public Action<string, int> OnPlayerChoiceSet;
 
         private QuestionContext m_QuestionContext;
-        private PlayersState m_PlayerState;
-        private List<string> m_PlayerOrder;
+        private readonly PlayersState m_PlayerState;
+        private readonly PlayerData[] m_PlayerOrder;
 
-        public GameStatus(List<string> players)
+        public GameStatus(MatchData md)
         {
-            m_PlayerOrder = players;
+            m_PlayerOrder = md.Players;
             Dictionary<string, PlayerState> playersState = new Dictionary<string, PlayerState>();
-            for (int i = 0; i < players.Count; i++)
+            for (int i = 0; i < m_PlayerOrder.Length; i++)
             {
-                playersState[players[i]] = new PlayerState();
+                playersState[m_PlayerOrder[i].Name] = new PlayerState();
             }
 
             m_PlayerState = new PlayersState
@@ -116,11 +117,11 @@ namespace Match
 
         public List<PlayerScoreData> GetPlayerScores()
         {
-            List<PlayerScoreData> scoreData = new List<PlayerScoreData>(m_PlayerOrder.Count);
-            foreach (string playerId in m_PlayerOrder)
+            List<PlayerScoreData> scoreData = new List<PlayerScoreData>(m_PlayerOrder.Length);
+            foreach (PlayerData plyData in m_PlayerOrder)
             {
-                PlayerState playerState = GetPlayerState(playerId);
-                scoreData.Add(new PlayerScoreData{PlayerId = playerId, Score = playerState.Score});
+                PlayerState playerState = GetPlayerState(plyData.Name);
+                scoreData.Add(new PlayerScoreData{PlayerId = plyData.Name, Score = playerState.Score});
             }
 
             return scoreData;

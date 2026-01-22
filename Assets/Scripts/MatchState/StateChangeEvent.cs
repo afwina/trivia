@@ -1,4 +1,4 @@
-﻿namespace Match.MatchState
+﻿namespace Game.MatchState
 {
     public class StateChangeEvent
     {

@@ -1,6 +1,6 @@
 using System;
 
-namespace Match
+namespace Game
 {
     public class QuestionBank
     {

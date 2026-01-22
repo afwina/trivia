@@ -1,38 +1,44 @@
-﻿using System.Collections.Generic;
-using Match.MatchState;
+﻿using System;
+using System.Collections.Generic;
+using Game.MatchState;
 using UnityEngine;
 
-namespace Match
+namespace Game
 {
     public class DisplayController : MonoBehaviour
     {
-        [SerializeField] private QuestionDisplay m_QuestionDisplay;
-        [SerializeField] private PlayerDisplay m_PlayerDisplay;
+        [SerializeField] private StartScreen m_StartScreen;
+        [SerializeField] private JoinScreen m_JoinScreen;
+        [SerializeField] private QuestionScreen m_QuestionScreen;
 
-        public void Init(GameStatus gameStatus)
+        private IScreen m_CurrentScreen;
+        
+        public void ShowStartScreen(Action onStartMatch)
         {
-            gameStatus.OnQuestionSet = StartQuestion;
-            gameStatus.OnPlayerChoiceSet = m_PlayerDisplay.OnPlayerChoiceSelected;
-            gameStatus.OnAnswerReveal = ShowAnswer;
-            gameStatus.OnScoreAdded = ShowScoring;
-            
-            m_PlayerDisplay.Init(gameStatus.GetPlayerScores());
+            SetScreen(m_StartScreen);
+            m_StartScreen.Init(onStartMatch);
         }
         
-        private void StartQuestion(QuestionContext questionContext)
+        public void ShowJoinScreen(string joinCode, Action onLaunchMatch)
         {
-            m_QuestionDisplay.Setup(questionContext.Question);
+            SetScreen(m_JoinScreen);
+            m_JoinScreen.Init(joinCode, onLaunchMatch);
         }
-
-        private void ShowAnswer(int correctAnswer)
+        
+        public void ShowGameScreen(GameStatus gameStatus)
         {
-            m_QuestionDisplay.HighlightCorrectAnswer();
-            m_PlayerDisplay.ResetHighlights();
+            SetScreen(m_QuestionScreen);
+            m_QuestionScreen.Init(gameStatus);
         }
-
-        private void ShowScoring(List<ScoreAddedData> data)
+        
+        private void SetScreen(IScreen screen)
         {
-            m_PlayerDisplay.AddScore(data);
+            if (m_CurrentScreen != null)
+            {
+                m_CurrentScreen.Close();
+            }
+            
+            m_CurrentScreen = screen;
         }
     }
 }

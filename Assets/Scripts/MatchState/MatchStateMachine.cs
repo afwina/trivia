@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Text.RegularExpressions;
-using Match.Input;
+using Game.Input;
 using UnityEngine;
 
-namespace Match.MatchState
+namespace Game.MatchState
 {
     public class MatchStateMachine
     {
@@ -21,12 +21,13 @@ namespace Match.MatchState
             
             m_States = new Dictionary<string, MatchState>
             {
+                {LobbyState.Name, new LobbyState(m_Context)},
                 {QuestionState.Name, new QuestionState(m_Context)},
                 {AnswerState.Name, new AnswerState(m_Context)},
                 {ScoringState.Name, new ScoringState(m_Context)}
             };
             
-            SetState(m_States[QuestionState.Name]);
+            SetState(m_States[LobbyState.Name]);
         }
         
         public void ChangeState(string name)
@@ -54,9 +55,9 @@ namespace Match.MatchState
             m_State.Update();
         }
 
-        public void OnInputAction(InputAction inputAction)
+        public void OnInputAction(AInputAction aInputAction)
         {
-            m_State.OnInputAction(inputAction);
+            m_State.OnInputAction(aInputAction);
         }
     }
 

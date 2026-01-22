@@ -1,7 +1,7 @@
-﻿using Match.Input;
+﻿using Game.Input;
 using Unity.VisualScripting;
 
-namespace Match.MatchState
+namespace Game.MatchState
 {
     public abstract class MatchState
     {
@@ -18,6 +18,6 @@ namespace Match.MatchState
         public abstract void OnExit();
         
 
-        public virtual void OnInputAction(InputAction action) { }
+        public virtual void OnInputAction(AInputAction action) { }
     }
 }

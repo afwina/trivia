@@ -4,7 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Match
+namespace Game
 {
     public class QuestionDisplay : MonoBehaviour
     {

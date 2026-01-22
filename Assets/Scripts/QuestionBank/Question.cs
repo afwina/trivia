@@ -1,4 +1,4 @@
-﻿namespace Match
+﻿namespace Game
 {
     public struct Question
     {

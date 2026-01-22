@@ -1,7 +1,7 @@
-﻿using Match.Input;
+﻿using Game.Input;
 using UnityEngine;
 
-namespace Match.MatchState
+namespace Game.MatchState
 {
     public class QuestionState : MatchState
     {
@@ -38,7 +38,7 @@ namespace Match.MatchState
             m_Timer = 0f;
         }
 
-        public override void OnInputAction(InputAction action)
+        public override void OnInputAction(AInputAction action)
         {
             if (action is PlayerChoiceAction playerChoice)
             {

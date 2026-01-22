@@ -1,33 +1,45 @@
 using System.Collections.Generic;
-using Match.Input;
-using Match.MatchState;
+using Game.Input;
+using Game.Match;
+using Game.MatchState;
 using UnityEngine;
 
-namespace Match
+namespace Game
 {
     public class GameController : MonoBehaviour
     {
         [SerializeField] private DisplayController m_DisplayController;
-        [SerializeField] private InputController m_InputController;
-
+        private IMatchController m_MatchController = new NetworkMatchController();
+        private IInputController m_InputController = new ClientsideInputController();
         private MatchStateMachine m_MatchStateMachine;
 
         private void Awake()
         {
-            var players = new List<string> { "Player_1", "Player_2", "Player_3", "Player_4" };
-            GameStatus gameStatus = new GameStatus(players);
-
-            m_DisplayController.Init(gameStatus);
-            m_MatchStateMachine = new MatchStateMachine(gameStatus);
-            m_InputController.OnInputAction += OnInputAction;
+            m_DisplayController.ShowStartScreen(StartMatch);
+            m_MatchStateMachine = new MatchStateMachine(new GameStatus(new MatchData()));
         }
 
+        private async void StartMatch()
+        {
+           MatchData md = await m_MatchController.RequestMatch();
+           m_DisplayController.ShowJoinScreen(md.JoinCode, StartGame);
+        }
+
+        private void StartGame()
+        {
+            MatchData md = m_MatchController.LaunchMatch();
+            GameStatus gameStatus = new GameStatus(md);
+
+            m_DisplayController.ShowGameScreen(gameStatus);
+            m_InputController.OnInputAction += OnInputAction;
+        }
+        
         private void Update()
         {
             m_MatchStateMachine.Update();
         }
 
-        private void OnInputAction(InputAction action)
+        private void OnInputAction(AInputAction action)
         {
             m_MatchStateMachine.OnInputAction(action);
         }
