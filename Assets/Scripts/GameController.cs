@@ -12,25 +12,31 @@ namespace Game
         private IMatchController m_MatchController = new NetworkMatchController();
         private IInputController m_InputController = new ClientsideInputController();
         private MatchStateMachine m_MatchStateMachine;
-
+        private GameStatus m_GameStatus;
+        
         private void Awake()
         {
-            m_DisplayController.ShowStartScreen(StartMatch);
-            m_MatchStateMachine = new MatchStateMachine(new GameStatus(new MatchData()));
+            InitStartScreen();
+            m_GameStatus = new GameStatus();
+            m_MatchStateMachine = new MatchStateMachine(m_GameStatus);
         }
 
-        private async void StartMatch()
+        private void InitStartScreen()
+        {
+            m_DisplayController.ShowStartScreen(SetupGameLobby);
+        }
+
+        private async void SetupGameLobby()
         {
            MatchData md = await m_MatchController.RequestMatch();
-           m_DisplayController.ShowJoinScreen(md.JoinCode, StartGame);
+           m_DisplayController.ShowJoinScreen(md.JoinCode, StartGame, InitStartScreen);
         }
 
         private void StartGame()
         {
             MatchData md = m_MatchController.LaunchMatch();
-            GameStatus gameStatus = new GameStatus(md);
-
-            m_DisplayController.ShowGameScreen(gameStatus);
+            m_GameStatus.SetMatchData(md);
+            m_DisplayController.ShowGameScreen(m_GameStatus);
             m_InputController.OnInputAction += OnInputAction;
         }
         

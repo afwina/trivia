@@ -19,10 +19,10 @@ namespace Game
             m_StartScreen.Init(onStartMatch);
         }
         
-        public void ShowJoinScreen(string joinCode, Action onLaunchMatch)
+        public void ShowJoinScreen(string joinCode, Action onLaunchMatch, Action onBack)
         {
             SetScreen(m_JoinScreen);
-            m_JoinScreen.Init(joinCode, onLaunchMatch);
+            m_JoinScreen.Init(joinCode, onLaunchMatch, onBack);
         }
         
         public void ShowGameScreen(GameStatus gameStatus)

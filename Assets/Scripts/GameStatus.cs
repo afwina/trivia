@@ -14,10 +14,15 @@ namespace Game
         public Action<string, int> OnPlayerChoiceSet;
 
         private QuestionContext m_QuestionContext;
-        private readonly PlayersState m_PlayerState;
-        private readonly PlayerData[] m_PlayerOrder;
+        private PlayersState m_PlayerState;
+        private PlayerData[] m_PlayerOrder;
 
-        public GameStatus(MatchData md)
+        public GameStatus()
+        {
+            m_QuestionContext = new QuestionContext();
+        }
+
+        public void SetMatchData(MatchData md)
         {
             m_PlayerOrder = md.Players;
             Dictionary<string, PlayerState> playersState = new Dictionary<string, PlayerState>();
@@ -30,7 +35,6 @@ namespace Game
             {
                 PlayerStateById = playersState
             };
-            m_QuestionContext = new QuestionContext();
         }
 
         public void SetQuestion(Question question, float duration)

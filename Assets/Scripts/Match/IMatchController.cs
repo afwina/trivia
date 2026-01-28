@@ -6,7 +6,6 @@ namespace Game.Match
     {
         public Task<MatchData> RequestMatch();
         public MatchData LaunchMatch();
-
         public void EndMatch();
     }
 }
