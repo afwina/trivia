@@ -18,7 +18,6 @@ namespace Game
         {
             InitStartScreen();
             m_GameStatus = new GameStatus();
-            m_MatchStateMachine = new MatchStateMachine(m_GameStatus);
         }
 
         private void InitStartScreen()
@@ -35,19 +34,18 @@ namespace Game
         private void StartGame()
         {
             MatchData md = m_MatchController.LaunchMatch();
+            
             m_GameStatus.SetMatchData(md);
             m_DisplayController.ShowGameScreen(m_GameStatus);
-            m_InputController.OnInputAction += OnInputAction;
+            m_MatchStateMachine = new MatchStateMachine(m_GameStatus, m_MatchController);
         }
         
         private void Update()
         {
-            m_MatchStateMachine.Update();
-        }
-
-        private void OnInputAction(AInputAction action)
-        {
-            m_MatchStateMachine.OnInputAction(action);
+            if (m_MatchStateMachine != null)
+            {
+                m_MatchStateMachine.Update();
+            }
         }
     }
 }

@@ -16,8 +16,5 @@ namespace Game.MatchState
         public abstract void OnEnter();
         public abstract void Update();
         public abstract void OnExit();
-        
-
-        public virtual void OnInputAction(AInputAction action) { }
     }
 }

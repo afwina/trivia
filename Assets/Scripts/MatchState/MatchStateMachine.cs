@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using Game.Input;
+using Game.Match;
 using UnityEngine;
 
 namespace Game.MatchState
@@ -10,24 +11,24 @@ namespace Game.MatchState
         private MatchState m_State;
         private Dictionary<string, MatchState> m_States;
         private MatchStateContext m_Context;
-
-        public MatchStateMachine(GameStatus gameStatus)
+        
+        public MatchStateMachine(GameStatus gameStatus, IMatchController matchController)
         {
             m_Context = new MatchStateContext
             {
                 StateMachine = this , 
-                GameStatus = gameStatus
+                GameStatus = gameStatus,
+                MatchController = matchController
             };
             
             m_States = new Dictionary<string, MatchState>
             {
-                {LobbyState.Name, new LobbyState(m_Context)},
                 {QuestionState.Name, new QuestionState(m_Context)},
                 {AnswerState.Name, new AnswerState(m_Context)},
                 {ScoringState.Name, new ScoringState(m_Context)}
             };
             
-            SetState(m_States[LobbyState.Name]);
+            SetState(m_States[QuestionState.Name]);
         }
         
         public void ChangeState(string name)
@@ -54,17 +55,13 @@ namespace Game.MatchState
         {
             m_State.Update();
         }
-
-        public void OnInputAction(AInputAction aInputAction)
-        {
-            m_State.OnInputAction(aInputAction);
-        }
     }
 
     public class MatchStateContext
     {
         public MatchStateMachine StateMachine;
         public GameStatus GameStatus;
+        public IMatchController MatchController;
     }
 
     public class QuestionContext

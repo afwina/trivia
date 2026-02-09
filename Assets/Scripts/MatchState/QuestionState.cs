@@ -22,6 +22,8 @@ namespace Game.MatchState
             
             Question question = m_QuestionBank.GetQuestion();
             Context.GameStatus.SetQuestion(question, m_Duration);
+            Context.MatchController.StartQuestion();
+            Context.MatchController.OnPlayerAnswer += OnInputAction;
         }
         
         public override void Update()
@@ -36,21 +38,19 @@ namespace Game.MatchState
         public override void OnExit()
         {
             m_Timer = 0f;
+            Context.MatchController.EndQuestion();
         }
 
-        public override void OnInputAction(AInputAction action)
+        private void OnInputAction(PlayerChoiceAction action)
         {
-            if (action is PlayerChoiceAction playerChoice)
+            if (!Context.GameStatus.HasPlayerSelectedChoice(action.PlayerId))
             {
-                if (!Context.GameStatus.HasPlayerSelectedChoice(playerChoice.PlayerId))
-                {
-                    Context.GameStatus.SetPlayerChoice(playerChoice.PlayerId, playerChoice.Choice);
-                }
+                Context.GameStatus.SetPlayerChoice(action.PlayerId, action.Choice);
+            }
 
-                if (Context.GameStatus.HaveAllPlayersSelectedChoice())
-                {
-                    Context.StateMachine.ChangeState(AnswerState.Name);
-                }
+            if (Context.GameStatus.HaveAllPlayersSelectedChoice())
+            {
+                Context.StateMachine.ChangeState(AnswerState.Name);
             }
         }
     }

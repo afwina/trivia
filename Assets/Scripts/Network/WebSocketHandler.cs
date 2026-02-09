@@ -13,7 +13,7 @@ public class WebSocketHandler
     private const string CLIENT_ID = "gc_001";
     
     private WebSocket m_WebSocket;
-    private readonly ConcurrentDictionary<string, Action<string>> m_MessageHandlers = new ();
+    private readonly ConcurrentDictionary<string, MessageHandler> m_MessageHandlers = new ();
 
     public bool IsOpen { get; private set; }
 
@@ -44,10 +44,17 @@ public class WebSocketHandler
             string thing = System.Text.Encoding.UTF8.GetString(bytes);
             Debug.Log("Received Message: "+thing);
 
-            ClientEvent e = JsonConvert.DeserializeObject<ClientEvent>(thing);
-            if (m_MessageHandlers.TryGetValue(e.Event, out Action<string> action))
+            ServerEvent e = JsonConvert.DeserializeObject<ServerEvent>(thing);
+            if (m_MessageHandlers.TryGetValue(e.Event, out MessageHandler handler))
             {
-                action.Invoke(e.Data);
+                if (e.Success)
+                {
+                    handler.OnSuccess.Invoke(e.Data);
+                }
+                else
+                {
+                    handler.OnFailure.Invoke(e.Data);
+                }
             }
             
         };
@@ -57,15 +64,21 @@ public class WebSocketHandler
         Process();
     }
 
-    public void AddMessageListener(string eventName, Action<string> action)
+    public void AddMessageListener(string eventName, Action<string> onSuccess, Action<string> onFail = null)
     {
-        m_MessageHandlers.TryAdd(eventName, action);
+        m_MessageHandlers.TryAdd(eventName, new MessageHandler{OnSuccess = onSuccess, OnFailure = onFail});
+    }
+    
+    public void RemoveMessageListener(string eventName)
+    {
+        m_MessageHandlers.Remove(eventName, out _);
     }
 
-    public async Task SendMessage(string eventName, string data)
+    public async Task SendMessage(string eventName, string matchId, string data = "")
     {
-        ClientEvent e = new ClientEvent {Event = eventName, ClientId = CLIENT_ID, Data = data};
+        ClientEvent e = new ClientEvent {Event = eventName, ClientId = CLIENT_ID, MatchId = matchId, Data = data};
         m_WebSocket.SendText(JsonConvert.SerializeObject(e));
+        Debug.Log("SEND "+ eventName);
     }
 
     private async void Process()

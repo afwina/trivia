@@ -28,6 +28,11 @@ namespace Game
             m_OnBack?.Invoke();
         }
         
+        public void Button_CopyMatchCode()
+        {
+            GUIUtility.systemCopyBuffer = m_MatchCode.text;
+        }
+        
         public void Close()
         {
             gameObject.SetActive(false);

@@ -13,7 +13,7 @@ namespace Game
             gameObject.SetActive(true);
         }
         
-        public void OnStartButtonClicked()
+        public void Button_OnStartClicked()
         {
             m_OnStartClicked?.Invoke();
         }

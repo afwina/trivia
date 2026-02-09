@@ -24,7 +24,7 @@ namespace Game
 
         public void SetMatchData(MatchData md)
         {
-            m_PlayerOrder = md.Players;
+            m_PlayerOrder = md.Players.ToArray();
             Dictionary<string, PlayerState> playersState = new Dictionary<string, PlayerState>();
             for (int i = 0; i < m_PlayerOrder.Length; i++)
             {
